@@ -2,15 +2,15 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.devtools.ksp)
-    alias(libs.plugins.dagger.hilt.android)
+    id("com.google.dagger.hilt.android")
 }
 
 android {
-    namespace = "com.berkaykbl.myshift"
+    namespace = "com.berkaykbl.shiftmate"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.berkaykbl.myshift"
+        applicationId = "com.berkaykbl.shiftmate"
         minSdk = 30
         targetSdk = 34
         versionCode = 1
@@ -67,7 +67,6 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     ksp(libs.androidx.room.compiler)
     ksp(libs.dagger.hilt.compiler)
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

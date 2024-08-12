@@ -15,22 +15,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.berkaykbl.shiftmate.presentation.home.HomeScreen
 import com.berkaykbl.shiftmate.presentation.ui.theme.ShiftMateTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             ShiftMateTheme {
                 Surface {
-                    val navController = rememberNavController()
-
-                    NavHost(navController = navController, startDestination = Screen.Home.route) {
-                        composable(Screen.Home.route) {
-
-                        }
-                    }
+                    Text("qwewq")
                 }
             }
         }

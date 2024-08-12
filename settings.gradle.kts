@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Mesailerim"
+rootProject.name = "ShiftMate"
 include(":app")
  
