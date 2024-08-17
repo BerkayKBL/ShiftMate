@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">ShiftMate</string>
+    <string name="leave.paid">Paid Leave</string>
+    <string name="leave.unpaid">Unpaid Leave</string>
+    <string name="leave.annual">Annual Leave</string>
+    <string name="leave.sick">Sick Leave</string>
 </resources>

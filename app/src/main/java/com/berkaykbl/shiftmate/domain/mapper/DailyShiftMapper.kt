@@ -1,7 +1,8 @@
-package com.berkaykbl.shiftmate.data.mapper
+package com.berkaykbl.shiftmate.domain.mapper
 
 import com.berkaykbl.shiftmate.data.entity.DailyShiftEntity
 import com.berkaykbl.shiftmate.domain.model.DailyShift
+import com.berkaykbl.shiftmate.presentation.model.DailyDetailModel
 
 
 fun DailyShiftEntity.toModel() : DailyShift {
@@ -23,5 +24,16 @@ fun DailyShift.toEntity() : DailyShiftEntity {
         day = day,
         shiftType = shiftType,
         hour = hour
+    )
+}
+
+fun DailyShift.toDetailModel(isNationalHoliday: Boolean) : DailyDetailModel {
+    return DailyDetailModel(
+        day,
+        month,
+        year,
+        shiftType,
+        hour,
+        isNationalHoliday
     )
 }

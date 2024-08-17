@@ -5,15 +5,17 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "wages",
+    tableName = "variables",
 )
-data class YearlyWageEntity(
+data class VariableEntity(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val id: Int,
-    @ColumnInfo(name = "year")
-    val year: Int,
-    @ColumnInfo(name = "wage")
-    val wage: Int,
+    @ColumnInfo(name = "key")
+    val key: String,
+    @ColumnInfo(name = "subKey")
+    val subKey: String,
+    @ColumnInfo(name = "value")
+    val value: String,
 )

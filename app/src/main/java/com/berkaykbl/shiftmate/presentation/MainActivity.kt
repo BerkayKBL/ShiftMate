@@ -16,7 +16,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.berkaykbl.shiftmate.presentation.home.HomeScreen
+import com.berkaykbl.shiftmate.presentation.menu.MenuScreen
+import com.berkaykbl.shiftmate.presentation.menu.subscreen.MultiplierScreen
+import com.berkaykbl.shiftmate.presentation.menu.subscreen.SalaryScreen
 import com.berkaykbl.shiftmate.presentation.ui.theme.ShiftMateTheme
+import com.berkaykbl.shiftmate.util.Screens
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -26,7 +30,22 @@ class MainActivity : ComponentActivity() {
         setContent {
             ShiftMateTheme {
                 Surface {
-                    Text("qwewq")
+                    val navController = rememberNavController()
+
+                    NavHost(navController = navController, startDestination = Screens.MultiplierMenu.route) {
+                        composable(Screens.Home.route) {
+                            HomeScreen(navController)
+                        }
+                        composable(Screens.Menu.route) {
+                            MenuScreen(navController)
+                        }
+                        composable(Screens.SalaryMenu.route) {
+                            SalaryScreen(navController)
+                        }
+                        composable(Screens.MultiplierMenu.route) {
+                            MultiplierScreen(navController)
+                        }
+                    }
                 }
             }
         }

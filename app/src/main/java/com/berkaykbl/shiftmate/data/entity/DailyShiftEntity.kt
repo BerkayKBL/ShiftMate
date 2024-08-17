@@ -10,7 +10,6 @@ import androidx.room.PrimaryKey
 data class DailyShiftEntity(
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
     val id: Int,
     @ColumnInfo(name = "year")
     val year: Int,

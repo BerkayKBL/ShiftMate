@@ -15,8 +15,6 @@ data class SettingsEntity(
     val id: Int,
     @ColumnInfo(name = "key")
     val key: String,
-    @ColumnInfo(name = "otherKey")
-    val otherKey: String = "",
     @ColumnInfo(name = "value")
     val value: String,
 )
