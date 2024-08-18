@@ -243,6 +243,14 @@ fun HomeScreen(
         },
         confirmCallback = {
             showEntryDialog = false
+            viewModel.setDailyShift(DailyShift(
+                0,
+                day,
+                month,
+                year,
+                "overtime",
+                entryValue.toInt()
+            ))
         }
     ) {
         if (entryType == "overtime") {

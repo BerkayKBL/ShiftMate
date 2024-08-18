@@ -71,7 +71,6 @@ fun SalaryScreen(
     }
 
     LaunchedEffect(salaries) {
-        println("test")
         newSalaries.clear()
         newSalaries.addAll(salaries)
     }
@@ -153,13 +152,11 @@ fun SalaryScreen(
             LazyColumn(
             ) {
                 val keyOptions = KeyboardOptions().copy(keyboardType = KeyboardType.Number)
-                
+
                 items(newSalaries.size, key = { k->
                     UUID.randomUUID()
                 }) { i ->
                     val salary = newSalaries[i]
-                    println("----- NEW SALARY ------")
-                    println(salary)
                     var salaryYear = remember {
                         mutableStateOf(salary.subKey)
                     }
@@ -169,9 +166,6 @@ fun SalaryScreen(
                     var editable = remember {
                         mutableStateOf(false)
                     }
-                    println("------ SALARY DETAIL -------")
-                    println(salaryValue.value)
-                    println(salaryYear)
                     Spacer(modifier = Modifier.height(15.dp))
                     Row(
                         verticalAlignment = Alignment.CenterVertically
@@ -210,10 +204,7 @@ fun SalaryScreen(
                             value = salaryValue.value,
                             onValueChange = { value ->
                                 if (!value.contains(Regex("[.,\\- ]"))) {
-                                    val yearValueInt = value.toIntOrNull()
-                                    if ((yearValueInt ?: 0) <= maxYear) {
-                                        salaryValue.value = value
-                                    }
+                                    salaryValue.value = value
                                 }
                             },
                             label = { Text("Salary") },

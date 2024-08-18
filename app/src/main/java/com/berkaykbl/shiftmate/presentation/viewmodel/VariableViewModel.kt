@@ -35,8 +35,6 @@ class VariableViewModel @Inject constructor(
                 if (key == "salary") {
                     _salaries.value = it.sortedBy { e -> e.subKey }
                 } else if (key == "multiplier") {
-                    println("qweqwe")
-                    println(it)
                     _multipliers.value = it
                 } else if (key == "bonus") {
                     _multipliers.value = it

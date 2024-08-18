@@ -63,7 +63,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         getShiftsForMonth()
-        changeSalary()
+        changeVariable()
     }
 
     fun setDailyShift(model: DailyShift) {
@@ -104,17 +104,39 @@ class HomeViewModel @Inject constructor(
         return days.value.find { it.day == day && it.year == year && it.month == month }
     }
 
-    fun changeSalary() {
+    fun changeVariable() {
         viewModelScope.launch {
             variableUseCases.getVariableByKeyAndSubKeyUseCase.invoke(
                 "salary",
                 year.value.toString()
             ).collect {
-                println(it.size)
                 if (it.size > 0) {
-                    _variableModel.value = _variableModel.value.copy(salary = it.first().value.toInt())
-                    calculateDailyDetails()
+                    _variableModel.value =
+                        _variableModel.value.copy(salary = it.first().value.toInt())
                 }
+            }
+            println("--------------")
+        }
+
+        viewModelScope.launch {
+            variableUseCases.getVariablesByKeyUseCase.invoke(
+                "multiplier"
+            ).collect {
+
+                val weekday = it.find { it.subKey == "weekday" }
+                val saturday = it.find { it.subKey == "saturday" }
+                val sunday = it.find { it.subKey == "sunday" }
+                val holiday = it.find { it.subKey == "holiday" }
+
+                println("--------------")
+                println(weekday)
+                _variableModel.value = _variableModel.value.copy(
+                    weekdayMultiplier = weekday?.value?.toDouble() ?: 0.0,
+                    saturdayMultiplier = saturday?.value?.toDouble() ?: 0.0,
+                    sundayMultiplier = sunday?.value?.toDouble() ?: 0.0,
+                    holidayMultiplier = holiday?.value?.toDouble() ?: 0.0
+                )
+                calculateDailyDetails()
             }
         }
     }
@@ -133,7 +155,7 @@ class HomeViewModel @Inject constructor(
         _day.intValue = day
         _month.intValue = newMonth
         _year.intValue = newYear
-        changeSalary()
+        changeVariable()
         getShiftsForMonth()
     }
 

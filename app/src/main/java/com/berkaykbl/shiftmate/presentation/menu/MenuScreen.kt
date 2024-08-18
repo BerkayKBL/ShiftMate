@@ -68,6 +68,7 @@ fun MenuScreen(navController: NavController) {
             }
             item {
                 MenuItem(R.drawable.vector_multiplier, "Multiplier") {
+                    navController.navigate(Screens.MultiplierMenu.route)
 
                 }
             }

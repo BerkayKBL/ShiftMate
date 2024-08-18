@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
                 Surface {
                     val navController = rememberNavController()
 
-                    NavHost(navController = navController, startDestination = Screens.MultiplierMenu.route) {
+                    NavHost(navController = navController, startDestination = Screens.Home.route) {
                         composable(Screens.Home.route) {
                             HomeScreen(navController)
                         }
