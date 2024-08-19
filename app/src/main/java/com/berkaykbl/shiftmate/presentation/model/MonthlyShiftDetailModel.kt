@@ -2,6 +2,11 @@ package com.berkaykbl.shiftmate.presentation.model
 
 data class MonthlyShiftDetailModel (
 
+
+    // DATE
+    val month: Int,
+    val year: Int,
+
     // SALARY DETAILS
     val totalSalary: Double,
     val baseSalary: Int,

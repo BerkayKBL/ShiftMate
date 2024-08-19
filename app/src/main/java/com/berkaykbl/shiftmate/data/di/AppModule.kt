@@ -9,6 +9,7 @@ import com.berkaykbl.shiftmate.domain.repository.DailyShiftRepository
 import com.berkaykbl.shiftmate.domain.repository.VariableRepository
 import com.berkaykbl.shiftmate.domain.use_case.dailyShift.DailyShiftsUseCases
 import com.berkaykbl.shiftmate.domain.use_case.dailyShift.DeleteDailyShiftForDateUseCase
+import com.berkaykbl.shiftmate.domain.use_case.dailyShift.GetAllShiftsUseCase
 import com.berkaykbl.shiftmate.domain.use_case.dailyShift.GetShiftForDate
 import com.berkaykbl.shiftmate.domain.use_case.dailyShift.GetShiftsForMonthUseCase
 import com.berkaykbl.shiftmate.domain.use_case.dailyShift.InsertDailyShiftUseCase
@@ -60,7 +61,8 @@ object AppModule {
             insertDailyShifts = InsertDailyShiftUseCase(repository),
             updateDailyShifts = UpdateDailyShiftUseCase(repository),
             getShiftForDay = GetShiftForDate(repository),
-            deleteDailyShiftForDateUseCase = DeleteDailyShiftForDateUseCase(repository)
+            deleteDailyShiftForDateUseCase = DeleteDailyShiftForDateUseCase(repository),
+            getAllShiftsUseCase = GetAllShiftsUseCase(repository)
         )
     }
 

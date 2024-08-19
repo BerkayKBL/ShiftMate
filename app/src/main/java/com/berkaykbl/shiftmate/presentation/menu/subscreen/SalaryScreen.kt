@@ -97,6 +97,7 @@ fun SalaryScreen(
                         modifier = Modifier.size(25.dp)
                     )
                 }
+                Text(text = "Salaries", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 Button(onClick = {
                     val deleteElements = oldSalaries.filter { it.subKey !in newSalaries.map { it.subKey }}
                     val changedElements = mutableListOf<VariableModel>()

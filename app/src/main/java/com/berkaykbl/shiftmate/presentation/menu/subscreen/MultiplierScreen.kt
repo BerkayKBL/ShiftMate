@@ -104,6 +104,7 @@ fun MultiplierScreen(
                         modifier = Modifier.size(25.dp)
                     )
                 }
+                Text(text = "Multipliers", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 Button(onClick = {
                     println(weekdayMultiplier)
                     viewModel.setVariable(

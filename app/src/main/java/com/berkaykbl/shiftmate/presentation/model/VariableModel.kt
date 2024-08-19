@@ -9,5 +9,5 @@ data class VariableModel (
     val holidayMultiplier: Double,
 
     val attendanceBonus: Int,
-
+    val extraBonus: Int,
 )

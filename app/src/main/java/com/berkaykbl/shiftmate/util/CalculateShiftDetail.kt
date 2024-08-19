@@ -11,24 +11,25 @@ fun calculateShiftDetail(
     variableModel: VariableModel
 ): MonthlyShiftDetailModel {
 
-    val model = variableModel
     val cal = Calendar.getInstance()
 
-    val attendanceBonus = model.attendanceBonus
+    var month = 0
+    var year = 0
+    val attendanceBonus = variableModel.attendanceBonus
+    val extraBonus = variableModel.extraBonus
 
-    val baseSalary = model.salary
+    val baseSalary = variableModel.salary
     val dailySalary = baseSalary / 30
     val hourlySalary = dailySalary / 7.5
 
-    val weekdayMultiplier = model.weekdayMultiplier
-    val saturdayMultiplier = model.saturdayMultiplier
-    val sundayMultiplier = model.sundayMultiplier
-    val holidayMultiplier = model.holidayMultiplier
+    val weekdayMultiplier = variableModel.weekdayMultiplier
+    val saturdayMultiplier = variableModel.saturdayMultiplier
+    val sundayMultiplier = variableModel.sundayMultiplier
+    val holidayMultiplier = variableModel.holidayMultiplier
 
     var totalSalary = baseSalary.toDouble()
     var overtimePay = 0.0
     var bonuses = 0
-    var leaveDeductions = 0.0
 
     var totalOvertime = 0
     var weekdayOvertime = 0
@@ -46,6 +47,8 @@ fun calculateShiftDetail(
     var weekOfMonth = -1
 
     days.forEach { dayModel ->
+        month = dayModel.month
+        year = dayModel.year
         val shiftType = dayModel.shiftType
         cal.set(dayModel.year, dayModel.month - 1, dayModel.day)
         val dayOfWeekIndex = cal.get(Calendar.DAY_OF_WEEK) - 1
@@ -105,7 +108,7 @@ fun calculateShiftDetail(
     overtimePay *= hourlySalary
 
 
-    leaveDeductions = deductedDay.toDouble() * dailySalary
+    val leaveDeductions = deductedDay.toDouble() * dailySalary
     if (leaveDeductions == 0.0) {
         bonuses += attendanceBonus
     }
@@ -115,6 +118,8 @@ fun calculateShiftDetail(
 
 
     return MonthlyShiftDetailModel(
+        month,
+        year,
         totalSalary.toTwoDigitDouble(),
         baseSalary,
         overtimePay.toTwoDigitDouble(),

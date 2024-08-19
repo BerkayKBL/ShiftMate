@@ -39,6 +39,9 @@ class DailyShiftRepositoryImpl(private val dailyShiftDao: DailyShiftDao) : Daily
         dailyShiftDao.deleteShiftForDate(day, month, year)
     }
 
+    override fun getAllShifts(): Flow<List<DailyShiftEntity>> {
+        return dailyShiftDao.getAllShifts()
+    }
 
     /*override fun deleteShiftByMonth(year: Int, month: Int) {
         dailyShiftDao.deleteShiftByMonth(year, month)

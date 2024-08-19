@@ -38,17 +38,6 @@ fun HomeCalendar(
     val month by viewModel.month
     val year by viewModel.year
 
-    val yearlySalary = (salaries.find { it.subKey == year.toString() })
-    val variableModel = VariableModel(
-        yearlySalary?.value?.toInt() ?: 0,
-        1.25,
-        1.5,
-        2.0,
-        2.0,
-        1600
-    )
-
-    val colorScheme = MaterialTheme.colorScheme
 
     Column(
     ) {

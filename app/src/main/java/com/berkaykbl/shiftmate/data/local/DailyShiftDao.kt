@@ -22,7 +22,7 @@ interface DailyShiftDao {
     suspend fun getShiftsForYear(year: Int): List<DailyShiftEntity>
 
     @Query("SELECT * FROM shifts")
-    suspend fun getAllShifts(): List<DailyShiftEntity>
+    fun getAllShifts(): Flow<List<DailyShiftEntity>>
 
     @Query("DELETE FROM shifts WHERE year = :year AND month = :month")
     suspend fun deleteShiftByMonth(year: Int, month: Int)

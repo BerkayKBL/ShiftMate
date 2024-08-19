@@ -9,3 +9,5 @@ val gray = Color(0x235A5A5A)
 
 val currentDay = primary
 val selectedDay = Color(0xFF3079C7)
+
+val cardTransparency = Color(0x0F4D4D4D)

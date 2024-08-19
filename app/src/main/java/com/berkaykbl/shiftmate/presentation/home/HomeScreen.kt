@@ -62,8 +62,6 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
 
-    val shiftDays by viewModel.days
-
     val day by viewModel.day
     val month by viewModel.month
     val year by viewModel.year
@@ -80,13 +78,13 @@ fun HomeScreen(
     }
 
     var entryTitle by remember {
-        mutableStateOf("Leave")
+        mutableStateOf("")
     }
     var entryValue by remember {
-        mutableStateOf("paid_leave")
+        mutableStateOf("")
     }
     var entryType by remember {
-        mutableStateOf("leave")
+        mutableStateOf("")
     }
 
     var rotate = if(showButtonDialog) 45f else 0f
@@ -243,50 +241,52 @@ fun HomeScreen(
         },
         confirmCallback = {
             showEntryDialog = false
-            viewModel.setDailyShift(DailyShift(
+
+            if (entryType == "overtime") {
+                viewModel.setDailyShift(
+                    DailyShift(
+                        0,
+                        day,
+                        month,
+                        year,
+                        entryType,
+                        entryValue.toInt()
+                    )
+                )
+            } else if (entryType == "leave") {
+                viewModel.setDailyShift(
+                    DailyShift(
+                        0,
+                        day,
+                        month,
+                        year,
+                        entryValue,
+                        0
+                    )
+                )
+            } else if (entryType == "bonus") {
+                viewModel.setDailyShift(
+                    DailyShift(
+                        0,
+                        -1,
+                        month,
+                        year,
+                        entryType,
+                        entryValue.toInt()
+                    )
+                )
+            }
+            /*viewModel.setDailyShift(DailyShift(
                 0,
                 day,
                 month,
                 year,
                 "overtime",
                 entryValue.toInt()
-            ))
+            ))*/
         }
     ) {
-        if (entryType == "overtime") {
-            viewModel.setDailyShift(
-                DailyShift(
-                    0,
-                    day,
-                    month,
-                    year,
-                    entryType,
-                    entryValue.toInt()
-                )
-            )
-        } else if (entryType == "leave") {
-            viewModel.setDailyShift(
-                DailyShift(
-                    0,
-                    day,
-                    month,
-                    year,
-                    entryValue,
-                    0
-                )
-            )
-        } else if (entryType == "bonus") {
-            viewModel.setDailyShift(
-                DailyShift(
-                    0,
-                    -1,
-                    month,
-                    year,
-                    entryType,
-                    entryValue.toInt()
-                )
-            )
-        }
+        showEntryDialog = false
     }
     Scaffold(
         floatingActionButton = {

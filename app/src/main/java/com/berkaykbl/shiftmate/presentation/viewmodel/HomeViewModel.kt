@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.berkaykbl.shiftmate.domain.mapper.toDetailModel
 import com.berkaykbl.shiftmate.domain.model.DailyShift
 import com.berkaykbl.shiftmate.domain.use_case.dailyShift.DailyShiftsUseCases
@@ -28,10 +29,13 @@ class HomeViewModel @Inject constructor(
     private val _month = mutableIntStateOf(0)
     private val _year = mutableIntStateOf(0)
     private val _currentCalendar = mutableStateOf<Calendar?>(null)
-    private val _days = mutableStateOf(emptyList<DailyShift>())
+    private val _monthDays = mutableStateOf(emptyList<DailyShift>())
+    private val _allDays = mutableStateOf(emptyList<DailyShift>())
     private val _dayDetails =
         mutableStateOf(
             MonthlyShiftDetailModel(
+                0,
+                0,
                 0.0,
                 0,
                 0.0,
@@ -50,20 +54,24 @@ class HomeViewModel @Inject constructor(
                 0
             )
         )
-    private val _variableModel = mutableStateOf(VariableModel(0, 0.0, 0.0, 0.0, 0.0, 0))
+    private val _variableModel = mutableStateOf(VariableModel(0, 0.0, 0.0, 0.0, 0.0, 0, 0))
 
     val day: State<Int> get() = _day
     val month: State<Int> get() = _month
     val year: State<Int> get() = _year
     val currentCalendar: State<Calendar?> get() = _currentCalendar
-    val days: State<List<DailyShift>> get() = _days
+    val monthDays: State<List<DailyShift>> get() = _monthDays
+    val allDays: State<List<DailyShift>> get() = _allDays
     val dayDetails: State<MonthlyShiftDetailModel> get() = _dayDetails
-    private val variableModel: State<VariableModel> get() = _variableModel
+    val variableModel: State<VariableModel> get() = _variableModel
 
 
     init {
+        getAllShifts()
+        changeVariable("salary")
+        changeVariable("multiplier")
+        changeVariable("bonus")
         getShiftsForMonth()
-        changeVariable()
     }
 
     fun setDailyShift(model: DailyShift) {
@@ -81,18 +89,25 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun getShiftsForMonth() {
+    fun getAllShifts() {
+        viewModelScope.launch {
+            useCases.getAllShiftsUseCase.invoke().collect {
+                _allDays.value = it
+            }
+        }
+    }
+
+    fun getShiftsForMonth() {
         viewModelScope.launch {
             useCases.getDailyShiftsForMonth.invoke(year.value, month.value).collect {
-                _days.value = it
+                _monthDays.value = it
                 calculateDailyDetails()
             }
         }
-
     }
 
     private fun calculateDailyDetails() {
-        val dayDetails = days.value.map {
+        val dayDetails = _monthDays.value.map {
             it.toDetailModel(
                 nationalHolidays.contains("${it.day}/${it.month}")
             )
@@ -100,49 +115,77 @@ class HomeViewModel @Inject constructor(
         _dayDetails.value = calculateShiftDetail(dayDetails, variableModel.value)
     }
 
-    fun findShiftForDay(year: Int, month: Int, day: Int): DailyShift? {
-        return days.value.find { it.day == day && it.year == year && it.month == month }
+    fun calculateMonthlyDetail(
+        dailyShifts: List<DailyShift>,
+        variableModel: VariableModel
+    ): MonthlyShiftDetailModel {
+        var dailyShift = dailyShifts.map {
+            it.toDetailModel(
+                nationalHolidays.contains("${it.day}/${it.month}")
+            )
+        }
+        return calculateShiftDetail(dailyShift, this.variableModel.value)
     }
 
-    fun changeVariable() {
-        viewModelScope.launch {
-            variableUseCases.getVariableByKeyAndSubKeyUseCase.invoke(
-                "salary",
-                year.value.toString()
-            ).collect {
-                if (it.size > 0) {
-                    _variableModel.value =
-                        _variableModel.value.copy(salary = it.first().value.toInt())
+    fun findShiftForDay(year: Int, month: Int, day: Int): DailyShift? {
+        return _monthDays.value.find { it.day == day && it.year == year && it.month == month }
+    }
+
+    fun changeVariable(type: String, givenYear: String = "2024") {
+        if (type == "salary") {
+            viewModelScope.launch {
+                variableUseCases.getVariableByKeyAndSubKeyUseCase.invoke(
+                    "salary",
+                    givenYear
+                ).collect {
+                    if (it.isNotEmpty()) {
+                        _variableModel.value =
+                            _variableModel.value.copy(salary = it.first().value.toInt())
+                    }
                 }
             }
-            println("--------------")
-        }
+        } else if (type == "multiplier") {
 
-        viewModelScope.launch {
-            variableUseCases.getVariablesByKeyUseCase.invoke(
-                "multiplier"
-            ).collect {
+            viewModelScope.launch {
+                variableUseCases.getVariablesByKeyUseCase.invoke(
+                    "multiplier"
+                ).collect {
+                    val weekday = it.find { it.subKey == "weekday" }
+                    val saturday = it.find { it.subKey == "saturday" }
+                    val sunday = it.find { it.subKey == "sunday" }
+                    val holiday = it.find { it.subKey == "holiday" }
 
-                val weekday = it.find { it.subKey == "weekday" }
-                val saturday = it.find { it.subKey == "saturday" }
-                val sunday = it.find { it.subKey == "sunday" }
-                val holiday = it.find { it.subKey == "holiday" }
+                    _variableModel.value = _variableModel.value.copy(
+                        weekdayMultiplier = weekday?.value?.toDouble() ?: 0.0,
+                        saturdayMultiplier = saturday?.value?.toDouble() ?: 0.0,
+                        sundayMultiplier = sunday?.value?.toDouble() ?: 0.0,
+                        holidayMultiplier = holiday?.value?.toDouble() ?: 0.0
+                    )
+                }
+            }
+        } else if (type == "bonus") {
+            viewModelScope.launch {
+                variableUseCases.getVariablesByKeyUseCase.invoke(
+                    "bonus"
+                ).collect {
 
-                println("--------------")
-                println(weekday)
-                _variableModel.value = _variableModel.value.copy(
-                    weekdayMultiplier = weekday?.value?.toDouble() ?: 0.0,
-                    saturdayMultiplier = saturday?.value?.toDouble() ?: 0.0,
-                    sundayMultiplier = sunday?.value?.toDouble() ?: 0.0,
-                    holidayMultiplier = holiday?.value?.toDouble() ?: 0.0
-                )
-                calculateDailyDetails()
+                    val attendanceBonus = it.find { it.subKey == "attendance" }
+                    val extraBonus = it.find { it.subKey == "extra" }
+
+                    _variableModel.value = _variableModel.value.copy(
+                        attendanceBonus = attendanceBonus?.value?.toInt() ?: 0,
+                        extraBonus = extraBonus?.value?.toInt() ?: 0,
+                    )
+                    calculateDailyDetails()
+                }
             }
         }
+
+
     }
 
 
-    fun changeDayValues(day: Int, month: Int, year: Int, variableModel: VariableModel? = null) {
+    fun changeDayValues(day: Int, month: Int, year: Int) {
         var newMonth = month
         var newYear = year
         if (newMonth < 1) {
@@ -155,7 +198,7 @@ class HomeViewModel @Inject constructor(
         _day.intValue = day
         _month.intValue = newMonth
         _year.intValue = newYear
-        changeVariable()
+        changeVariable("salary")
         getShiftsForMonth()
     }
 

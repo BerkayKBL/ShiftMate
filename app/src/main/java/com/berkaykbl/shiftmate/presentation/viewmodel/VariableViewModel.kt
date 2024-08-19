@@ -27,6 +27,7 @@ class VariableViewModel @Inject constructor(
     init {
         getVariables("salary")
         getVariables("multiplier")
+        getVariables("bonus")
     }
 
     fun getVariables(key: String) {
@@ -37,7 +38,7 @@ class VariableViewModel @Inject constructor(
                 } else if (key == "multiplier") {
                     _multipliers.value = it
                 } else if (key == "bonus") {
-                    _multipliers.value = it
+                    _bonuses.value = it
                 }
             }
         }
@@ -58,13 +59,10 @@ class VariableViewModel @Inject constructor(
     fun setVariable(variableModel: VariableModel) {
         viewModelScope.launch {
             val variable = getVariableWithSubKey(variableModel.key, variableModel.subKey)
-            println(variable)
-            println(variableModel)
             if (variable == null) {
                 println("variable")
                 useCases.insertVariableUseCase.invoke(variableModel)
             } else {
-                println("vaxxxle")
                 useCases.updateVariableUseCase.invoke(variableModel.copy(id = variable.id))
             }
             getVariables(variableModel.key)

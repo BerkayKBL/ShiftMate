@@ -73,13 +73,14 @@ fun MenuScreen(navController: NavController) {
                 }
             }
             item {
-                MenuItem(R.drawable.vector_monthly, "Monthly Data") {
+                MenuItem(R.drawable.vector_payments, "Bonuses") {
+                    navController.navigate(Screens.BonusMenu.route)
 
                 }
             }
             item {
-                MenuItem(R.drawable.vector_payments, "Bonuses") {
-
+                MenuItem(R.drawable.vector_monthly, "Monthly Data") {
+                    navController.navigate(Screens.MonthlyDataMenu.route)
                 }
             }
         }

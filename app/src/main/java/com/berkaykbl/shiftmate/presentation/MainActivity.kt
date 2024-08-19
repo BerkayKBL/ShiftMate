@@ -17,6 +17,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.berkaykbl.shiftmate.presentation.home.HomeScreen
 import com.berkaykbl.shiftmate.presentation.menu.MenuScreen
+import com.berkaykbl.shiftmate.presentation.menu.subscreen.BonusScreen
+import com.berkaykbl.shiftmate.presentation.menu.subscreen.MonthlyDataScreen
 import com.berkaykbl.shiftmate.presentation.menu.subscreen.MultiplierScreen
 import com.berkaykbl.shiftmate.presentation.menu.subscreen.SalaryScreen
 import com.berkaykbl.shiftmate.presentation.ui.theme.ShiftMateTheme
@@ -27,6 +29,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        deleteDatabase("shift_mate_db")
         setContent {
             ShiftMateTheme {
                 Surface {
@@ -44,6 +47,12 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Screens.MultiplierMenu.route) {
                             MultiplierScreen(navController)
+                        }
+                        composable(Screens.BonusMenu.route) {
+                            BonusScreen(navController)
+                        }
+                        composable(Screens.MonthlyDataMenu.route) {
+                            MonthlyDataScreen(navController)
                         }
                     }
                 }

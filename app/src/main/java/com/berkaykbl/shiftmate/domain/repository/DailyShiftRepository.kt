@@ -11,6 +11,7 @@ interface DailyShiftRepository {
     fun getShiftsForMonth(year: Int, month: Int): Flow<List<DailyShiftEntity>>
     fun getShiftForDate(year: Int, month: Int, day: Int): Flow<List<DailyShiftEntity>>
     suspend fun deleteShiftForDate(year: Int, month: Int, day: Int)
+    fun getAllShifts(): Flow<List<DailyShiftEntity>>
     /*
     fun getShiftsForDate(year: Int, month: Int, day: Int): List<DailyShift>
     fun deleteShiftByMonth(year: Int, month: Int)
